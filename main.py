@@ -40,11 +40,11 @@ def comb_sort_func(subject: Subject):
 
 
 if __name__ == '__main__':
-    results_file_name = '../Unit-Selection/results.txt'
-    excel_file_name = '../Unit-Selection/انتخاب واحد 4002.xls'
+    results_file_name = 'results.txt'
+    excel_file_name = 'units_example.xls'
     sheet_name = 'Sheet1'
 
-    subjects = ExcelSubjectsParser(excel_file_name, sheet_name).get_subjects()
+    subjects = ExcelSubjectsParser(excel_file_name, sheet_name).parse()
 
     start = time.time()
     unit_selector = UnitSelector(subjects, sort_func, comb_sort_func)

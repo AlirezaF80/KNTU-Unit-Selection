@@ -13,7 +13,7 @@ class ExcelSubjectsParser:
         self._file_path = excel_file_path
         self._sheet_name = excel_sheet_name
 
-    def get_subjects(self):
+    def parse(self) -> List[Subject]:
         sheet = self._read_excel_sheet(self._file_path, self._sheet_name)
         return self._parse_excel_file(sheet)
 

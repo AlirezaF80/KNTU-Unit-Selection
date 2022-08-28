@@ -4,11 +4,16 @@ from subject import Subject
 
 
 class UnitSelector:
-    def __init__(self, subjects: List[Subject], sort_func=None, subject_sort_func=None):
+    def __init__(self, subjects: List[Subject], combs_sort_func=None, subject_sort_func=None):
+        '''
+        :param subjects: list of subjects to choose from
+        :param combs_sort_func: function to sort the possible combinations
+        :param subject_sort_func: function to sort the subjects in each combination
+        '''
         self._subjects = subjects
         self._is_done = False
         self._possible_combs = []
-        self._sort_func = sort_func
+        self._combs_sort_func = combs_sort_func
         self._subs_sort_func = subject_sort_func
 
     def get_possible_combinations(self) -> List[Set[Subject]]:
@@ -16,11 +21,13 @@ class UnitSelector:
             self._calc_possible_combs(self._subjects, [])
             print(f'Calculated {len(self._possible_combs)} possible combinations.')
             self._possible_combs = self._clean_possible_combs(self._possible_combs)
-            if self._sort_func:
-                self._possible_combs = list(sorted(self._possible_combs, key=self._sort_func))
+            if self._combs_sort_func:
+                # First sort the possible combinations by the sort function
+                self._possible_combs = list(sorted(self._possible_combs, key=self._combs_sort_func))
+                # Then sort the subjects in each combination by the sort function
                 self._possible_combs = [list(sorted(comb, key=self._subs_sort_func)) for comb in self._possible_combs]
             self._is_done = True
-            print(f'Cleaned to {len(self._possible_combs)} combinations.')
+            print(f'Reduced to {len(self._possible_combs)} combinations.')
         return self._possible_combs
 
     @staticmethod
