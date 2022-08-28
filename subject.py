@@ -37,9 +37,9 @@ class SubjectTime:
         string = [self.week_day.value, self.interval.__str__()]
         if self.is_theory is not None:
             if self.is_theory:
-                string.insert(0, 'درس(ت)')
+                string.insert(0, 'درس(ت):')
             else:
-                string.insert(0, 'درس(ع)')
+                string.insert(0, 'درس(ع):')
         return ' '.join(string)
 
 
@@ -53,19 +53,24 @@ class ExamTime:
 
 
 class Subject:
-    def __init__(self, name, units, id_num, group_id, master, times, exam_time, free_capacity, score):
+    def __init__(self, name, units, id_num, group_id, teacher_name, times, exam_time, registered, capacity, score):
         self.name: str = name
         self.units: int = units
         self.id_num: int = id_num
         self.group_id: int = group_id
-        self.master: str = master
+        self.teacher_name: str = teacher_name
         self.times: List[SubjectTime] = times
         self.exam_time: ExamTime = exam_time
-        self.free_capacity: float = free_capacity
+        self.registered: int = registered
+        self.capacity: int = capacity
+        try:
+            self.free_capacity: float = 1 - registered / capacity
+        except ZeroDivisionError:
+            self.free_capacity: float = 1
         self.score: int = score
 
     def __str__(self):
-        string = f'شماره درس: {self.id_num}_{self.group_id}, نام: {self.name}, استاد: {self.master}'
+        string = f'شماره درس: {self.id_num}_{self.group_id}, نام: {self.name}, استاد: {self.teacher_name}'
         if self.exam_time:
             string += f'\nزمان: {self.times} , امتحان:{self.exam_time}'
         else:
@@ -73,7 +78,7 @@ class Subject:
         return string
 
     def __repr__(self):
-        return f'{self.id_num}_{self.group_id}, {self.name}, {self.master}'
+        return f'{self.id_num}_{self.group_id}, {self.name}, {self.teacher_name}'
 
     def __hash__(self):
         return hash(self.id_num) ^ hash(self.group_id)

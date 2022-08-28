@@ -1,4 +1,4 @@
-from typing import List, Set
+from typing import Set, List
 
 from subject import Subject
 
@@ -36,20 +36,18 @@ class Combination:
 
 
 class UnitSelector:
-    def __init__(self, subjects: Set[Subject], combs_sort_func=None, subject_sort_func=None, clean_combs_func=None):
+    def __init__(self, subjects: Set[Subject], combs_sort_func=None, clean_combs_func=None):
         '''
         :param subjects: list of subjects to choose from
         :param combs_sort_func: function to sort the possible combinations
-        :param subject_sort_func: function to sort the subjects in each combination
         '''
         self._subjects: Set[Subject] = subjects
         self._possible_combs: Set[Combination] = set()
         self._combs_sort_func = combs_sort_func
-        self._subs_sort_func = subject_sort_func
         self._clean_possible_combs = clean_combs_func
         self._is_done = False
 
-    def get_possible_combinations(self) -> List[Set[Subject]]:
+    def get_possible_combinations(self) -> List[Combination]:
         if not self._is_done:
             self._calc_possible_combs(self._subjects, set())
             print(f'Calculated {len(self._possible_combs)} possible combinations.')
@@ -57,25 +55,9 @@ class UnitSelector:
             if self._combs_sort_func:
                 # First sort the possible combinations by the sort function
                 self._possible_combs = list(sorted(self._possible_combs, key=self._combs_sort_func))
-                # Then sort the subjects in each combination by the sort function
-                self._possible_combs = [list(sorted(comb, key=self._subs_sort_func)) for comb in self._possible_combs]
             self._is_done = True
             print(f'Reduced to {len(self._possible_combs)} combinations.')
         return self._possible_combs
-
-    @staticmethod
-    def _remove_duplicate_combs(possible_combs):
-        possible_combs_set = []
-        for comb in possible_combs:
-            comb = set(comb)
-            is_comb_available = False
-            for i in possible_combs_set:
-                if i == comb:
-                    is_comb_available = True
-                    break
-            if not is_comb_available:
-                possible_combs_set.append(comb)
-        return possible_combs_set
 
     @staticmethod
     def _is_overlapping(sub1: Subject, sub2: Subject):

@@ -2,6 +2,7 @@ import datetime
 import time
 from typing import Set
 
+from excelResultsWriter import ExcelResultsWriter
 from excelSubjectsParser import ExcelSubjectsParser
 from subject import Subject
 from unitSelector import UnitSelector, Combination
@@ -38,17 +39,24 @@ def clean_combs(all_combs: Set[Combination]) -> Set[Combination]:
 
 
 if __name__ == '__main__':
-    results_file_name = 'results_example.txt'
-    excel_file_name = 'units_example.xls'
-    sheet_name = 'Sheet1'
+    subjects_file_name = 'units_example.xls'
+    subs_sheet_name = 'Sheet1'
+    combs_file_name = 'results_example.xls'
 
-    subjects = ExcelSubjectsParser(excel_file_name, sheet_name).parse()
+    subjects = ExcelSubjectsParser(subjects_file_name, subs_sheet_name).parse()
     subjects = set(subjects)
     subjects = set(filter(lambda s: s.free_capacity > 0, subjects))
 
     start = time.time()
-    unit_selector = UnitSelector(subjects, combs_sort_func, subjects_sort_func, clean_combs)
+    unit_selector = UnitSelector(subjects, combs_sort_func, clean_combs)
     possible_combs = unit_selector.get_possible_combinations()
     print(f'It took {round(time.time() - start)}s.')
 
-    write_results(results_file_name)
+    # write_results(combs_file_name)
+    # print(f'Results written to {combs_file_name}.')
+
+    results_writer = ExcelResultsWriter(combs_file_name, subjects_sort_func)
+
+    for i, comb in enumerate(possible_combs[::-1]):
+        results_writer.write_combination(comb, f'{i}-{comb.units}-{comb.score}')
+    results_writer.save_to_file()

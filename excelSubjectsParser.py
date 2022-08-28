@@ -52,19 +52,20 @@ class ExcelSubjectsParser:
         # Get Subject's Exam Time
         exam_time = ExcelSubjectsParser._get_exam_time(row[5])
         # Get Subject's Capacity
-        free_capacity = ExcelSubjectsParser._get_free_capacity(row)
-        subject = Subject(sub_name, units, sub_id, sub_group, master_name, intervals, exam_time, free_capacity, score)
+        reg_num, full_cap = ExcelSubjectsParser._get_capacity(row)
+        subject = Subject(sub_name, units, sub_id, sub_group, master_name, intervals, exam_time, reg_num, full_cap,
+                          score)
         return subject
 
     @staticmethod
-    def _get_free_capacity(row) -> float:
+    def _get_capacity(row) -> (float, float):
         try:
             total_capacity = int(row[6])
             registered_num = int(row[7])
             # registered_num = min(registered_num, total_capacity)
-            return 1 - (registered_num / total_capacity)
+            return registered_num, total_capacity
         except Exception:
-            return 1
+            return 0, 0
 
     @staticmethod
     def _get_subject_times(row) -> List[SubjectTime]:
