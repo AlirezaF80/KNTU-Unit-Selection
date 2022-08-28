@@ -24,7 +24,7 @@ class ExcelSubjectsParser:
         return sheet
 
     @staticmethod
-    def _parse_excel_file(sheet: Sheet):
+    def _parse_excel_file(sheet: Sheet) -> List[Subject]:
         subjects: List[Subject] = []
         for i in range(1, sheet.nrows):
             row_values = sheet.row_values(i)
@@ -35,7 +35,7 @@ class ExcelSubjectsParser:
         return subjects
 
     @staticmethod
-    def _parse_excel_row(row):
+    def _parse_excel_row(row) -> Subject:
         # Get Subject's score given by the user
         score = int(row[8])
         # Get Subject's id and group

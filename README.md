@@ -28,15 +28,16 @@ subjects = parser.parse()
 ```
 
 After that you use the units selection algorithm to get the units you want.
-You have to provide two sort functions to sort the units:
+You have to provide two sort functions and a combination cleaner function:
 
 * First sort function, sorts the possible combinations.
 * Second sort function, sorts the subjects inside each combination.
+* Third function, cleans the combinations (for example combinations with less than 12 units).
 
 ```python
 from unitSelector import UnitSelector
 
-unit_selector = UnitSelector(subjects, combs_sort_func, subs_sort_func)
+unit_selector = UnitSelector(subjects, combs_sort_func, subjects_sort_func, clean_combs)
 possible_combs = unit_selector.get_possible_combinations()
    ```
 

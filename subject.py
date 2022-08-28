@@ -53,7 +53,7 @@ class ExamTime:
 
 
 class Subject:
-    def __init__(self, name, units, id_num, group_id, master, times, exam_time, capacity, score=2):
+    def __init__(self, name, units, id_num, group_id, master, times, exam_time, free_capacity, score):
         self.name: str = name
         self.units: int = units
         self.id_num: int = id_num
@@ -61,13 +61,19 @@ class Subject:
         self.master: str = master
         self.times: List[SubjectTime] = times
         self.exam_time: ExamTime = exam_time
-        self.capacity: float = capacity
+        self.free_capacity: float = free_capacity
         self.score: int = score
 
-    def __repr__(self):
+    def __str__(self):
         string = f'شماره درس: {self.id_num}_{self.group_id}, نام: {self.name}, استاد: {self.master}'
-        string += f'\nزمان: {self.times} , امتحان:{self.exam_time}'
+        if self.exam_time:
+            string += f'\nزمان: {self.times} , امتحان:{self.exam_time}'
+        else:
+            string += f'\nزمان: {self.times}'
         return string
+
+    def __repr__(self):
+        return f'{self.id_num}_{self.group_id}, {self.name}, {self.master}'
 
     def __hash__(self):
         return hash(self.id_num) ^ hash(self.group_id)
