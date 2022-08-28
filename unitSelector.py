@@ -47,7 +47,7 @@ class UnitSelector:
     @staticmethod
     def _clean_possible_combs(combs: List[Set[Subject]]):
         combs = UnitSelector._remove_duplicate_combs(combs)
-        combs = [c for c in combs if sum([s.units for s in c]) >= 12]
+        combs = list(filter(lambda c: sum([s.units for s in c]) >= 12, combs))
         # Ham Niazi Az OS va OS
         combs = [c for c in combs if
                  not ('1912024' in [s.id_num for s in c] and '1914009' not in [s.id_num for s in c])]

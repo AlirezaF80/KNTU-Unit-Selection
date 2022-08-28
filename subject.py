@@ -70,4 +70,4 @@ class Subject:
         return string
 
     def __hash__(self):
-        return hash([self.id_num, self.group_id])
+        return hash(self.id_num) ^ hash(self.group_id)

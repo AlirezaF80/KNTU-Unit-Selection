@@ -58,16 +58,13 @@ class ExcelSubjectsParser:
 
     @staticmethod
     def _get_free_capacity(row) -> float:
-        free_capacity = 1
-        # First check if there is a total capacity
-        if str(row[6]).isdigit():
+        try:
             total_capacity = int(row[6])
-            # If there is a total capacity, check if there is a free capacity
-            if str(row[7]).isdigit():
-                registered_num = int(row[7])
-                # registered_num = min(registered_num, total_capacity)
-                free_capacity = 1 - (registered_num / total_capacity)
-        return free_capacity
+            registered_num = int(row[7])
+            # registered_num = min(registered_num, total_capacity)
+            return 1 - (registered_num / total_capacity)
+        except Exception:
+            return 1
 
     @staticmethod
     def _get_subject_times(row) -> List[SubjectTime]:
