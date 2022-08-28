@@ -11,6 +11,7 @@ given to each one.
 
 * Python 3.6+
 * xlrd (pip install xlrd)
+* xlwt (pip install xlwt)
 
 ## Usage
 
