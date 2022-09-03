@@ -5,11 +5,14 @@ from typing import List
 
 class WeekDay(enum.Enum):
     SHANBE = 'شنبه'
-    YEK_SHANBE = 'يك شنبه'
-    DO_SHANBE = 'دو شنبه'
-    SE_SHANBE = 'سه شنبه'
-    CHAR_SHANBE = 'چهار شنبه'
+    YEK_SHANBE = 'يكشنبه'
+    DO_SHANBE = 'دوشنبه'
+    SE_SHANBE = 'سهشنبه'
+    CHAR_SHANBE = 'چهارشنبه'
     NOT_FOUND = 'Not Found'
+
+    def __str__(self):
+        return self.value
 
 
 class TimeInterval:
@@ -18,13 +21,19 @@ class TimeInterval:
         self.end = end_time
 
     def is_overlapping(self, other):
-        return self.start <= other.start <= self.end or self.start <= other.end <= self.end
+        return self.start <= other.start < self.end or self.start < other.end <= self.end
 
     def __str__(self):
         return f'{self.start}-{self.end}'
 
     def __repr__(self):
         return self.__str__()
+
+    def __eq__(self, other):
+        return self.start == other.start and self.end == other.end
+
+    def __hash__(self):
+        return hash((self.start, self.end))
 
 
 class SubjectTime:

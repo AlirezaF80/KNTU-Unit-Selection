@@ -1,3 +1,4 @@
+import datetime
 from typing import Set, List
 
 from subject import Subject
@@ -6,6 +7,22 @@ from subject import Subject
 class Combination:
     def __init__(self, subjects: Set[Subject]):
         self._subjects = frozenset(subjects)
+        self._subjects_by_days = self.get_schedule()
+
+    def get_schedule(self):
+        '''
+            Get the combination's schedule
+        :return: Dictionary of subjects grouped by days
+        '''
+        subjects_by_days = {}
+        for s in self._subjects:
+            for t in s.times:
+                if t.week_day not in subjects_by_days:
+                    subjects_by_days[t.week_day] = []
+                subjects_by_days[t.week_day].append(s)
+        for day in subjects_by_days:
+            subjects_by_days[day] = sorted(subjects_by_days[day], key=lambda s: s.times[0].interval.start)
+        return subjects_by_days
 
     @property
     def subjects(self):
@@ -18,6 +35,36 @@ class Combination:
     @property
     def score(self):
         return sum(subject.score for subject in self._subjects)
+
+    @property
+    def days(self):
+        days = set()
+        for subject in self._subjects:
+            for day in subject.times:
+                days.add(day.week_day)
+        return days
+
+    def spare_times(self):
+        spare_hours = 0
+        for day in self._subjects_by_days:
+            if len(self._subjects_by_days[day]) > 1:
+                for i in range(len(self._subjects_by_days[day]) - 1):
+                    datetimeA = datetime.datetime.combine(datetime.date.today(),
+                                                          self._subjects_by_days[day][i].times[0].interval.end)
+                    datetimeB = datetime.datetime.combine(datetime.date.today(),
+                                                          self._subjects_by_days[day][i + 1].times[0].interval.start)
+                    interval = (datetimeB - datetimeA).total_seconds() // 3600
+                    if interval >= 3:
+                        spare_hours += interval
+        return spare_hours
+
+    def days_between_exams(self):
+        days = []
+        exams = [s.exam_time.day for s in self._subjects if s.exam_time.day is not None]
+        exams = list(sorted(exams))
+        for i in range(len(exams) - 1):
+            days.append((exams[i + 1] - exams[i]).days)
+        return days
 
     def __contains__(self, item):
         return item in self._subjects
@@ -54,7 +101,7 @@ class UnitSelector:
             self._possible_combs = self._clean_possible_combs(self._possible_combs)
             if self._combs_sort_func:
                 # First sort the possible combinations by the sort function
-                self._possible_combs = list(sorted(self._possible_combs, key=self._combs_sort_func))
+                self._possible_combs = list(sorted(self._possible_combs, key=self._combs_sort_func, reverse=True))
             self._is_done = True
             print(f'Reduced to {len(self._possible_combs)} combinations.')
         return self._possible_combs

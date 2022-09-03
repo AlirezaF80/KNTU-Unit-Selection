@@ -58,14 +58,15 @@ class ExcelSubjectsParser:
         return subject
 
     @staticmethod
-    def _get_capacity(row) -> (float, float):
+    def _get_capacity(row) -> (int, int):
+        total_capacity, registered_num = 0, 0
         try:
             total_capacity = int(row[6])
             registered_num = int(row[7])
             # registered_num = min(registered_num, total_capacity)
-            return registered_num, total_capacity
         except Exception:
-            return 0, 0
+            pass
+        return registered_num, total_capacity
 
     @staticmethod
     def _get_subject_times(row) -> List[SubjectTime]:
@@ -85,6 +86,7 @@ class ExcelSubjectsParser:
         elif time_string.startswith('درس(ع)'):
             is_theory = False
             time_string = time_string.replace('درس(ع)', '')
+        time_string = time_string.replace(' ', '')
         weekday: WeekDay = WeekDay.NOT_FOUND
         for day in WeekDay:
             if time_string.find(day.value) != -1:

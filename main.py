@@ -22,8 +22,7 @@ def write_results(file_name):
 
 
 def combs_sort_func(comb: Combination):
-    score = 0
-    return comb.units, score
+    return comb.units, comb.score, -comb.spare_times(), -len(comb.days)
 
 
 def subjects_sort_func(subject: Subject):
@@ -47,6 +46,10 @@ if __name__ == '__main__':
     subjects = set(subjects)
     subjects = set(filter(lambda s: s.free_capacity > 0, subjects))
 
+    for sub in subjects:
+        print(sub)
+        print("_" * 100)
+
     start = time.time()
     unit_selector = UnitSelector(subjects, combs_sort_func, clean_combs)
     possible_combs = unit_selector.get_possible_combinations()
@@ -57,6 +60,6 @@ if __name__ == '__main__':
 
     results_writer = ExcelResultsWriter(combs_file_name, subjects_sort_func)
 
-    for i, comb in enumerate(possible_combs[::-1]):
-        results_writer.write_combination(comb, f'{i}-{comb.units}-{comb.score}')
+    for i, comb in enumerate(possible_combs):
+        results_writer.write_combination(comb, f'{i}-{comb.units}-{comb.score}-{comb.spare_times()}')
     results_writer.save_to_file()
