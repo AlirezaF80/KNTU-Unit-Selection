@@ -1,11 +1,8 @@
-# Unit-Selection
+# KNTU Unit Selection
 
 ## Introduction
 
-KNTU Unit Selection<br>
-This is a personal project to select units for KNTU students.
-Using a backtracking algorithm, it will find the best units for each student, based on their input subjects and scores
-given to each one.
+This is a project to help KNTU students select units based on a number of criteria. Using a backtracking algorithm, it will find the best units for each student, based on their input subjects and scores given to each one.
 
 ## Requirements
 
